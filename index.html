@@ -1,428 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator - Modern Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">QR Code Generator</h1>
-            <p class="text-gray-600">Generate and download QR codes instantly</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Glassmorphism styles */
+      .glass {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .glass-dark {
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Animated gradient background */
+      .gradient-bg {
+        background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Floating animation */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .float {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      /* Pulse animation */
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(79, 172, 254, 0.6);
+        }
+      }
+
+      .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+
+      /* Morphing shapes */
+      .morph-1 {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        animation: morph1 8s ease-in-out infinite;
+      }
+
+      .morph-2 {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+        animation: morph2 7s ease-in-out infinite;
+      }
+
+      @keyframes morph1 {
+        0%,
+        100% {
+          border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+        50% {
+          border-radius: 30% 60% 40% 70% / 50% 60% 30% 60%;
+        }
+      }
+
+      @keyframes morph2 {
+        0%,
+        100% {
+          border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+        }
+        50% {
+          border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(79, 172, 254, 0.6);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(79, 172, 254, 0.8);
+      }
+
+      /* Micro interactions */
+      .micro-bounce:active {
+        transform: scale(0.95);
+      }
+
+      .hover-lift:hover {
+        transform: translateY(-5px);
+      }
+
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Color input styling */
+      input[type="color"] {
+        -webkit-appearance: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 12px;
+      }
+
+      /* Select styling */
+      select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+
+      /* Responsive fixes */
+      @media (max-width: 768px) {
+        .float {
+          animation: none;
+        }
+
+        .morph-1,
+        .morph-2 {
+          animation: none;
+          border-radius: 50%;
+        }
+      }
+
+      /* Animation delays */
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+
+      /* Smooth reveal animation */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease;
+      }
+
+      .reveal.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* QR Code animation */
+      .qr-scale-in {
+        animation: qrScaleIn 0.5s ease-out;
+      }
+
+      @keyframes qrScaleIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen gradient-bg overflow-x-hidden">
+    <!-- Floating background elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -left-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 morph-1"></div>
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 morph-2 animation-delay-2000"></div>
+      <div class="absolute -bottom-40 left-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 morph-1 animation-delay-4000"></div>
+    </div>
+
+    <div class="relative z-10 container mx-auto px-4 py-8 min-h-screen">
+      <!-- Header -->
+      <div class="text-center mb-12 float reveal">
+        <div class="inline-block glass rounded-3xl px-8 py-6 mb-6">
+          <h1 class="text-4xl md:text-6xl font-black gradient-text mb-3">QR Generator</h1>
+          <p class="text-white/80 text-lg font-medium">Create stunning QR codes with modern design</p>
+          <p class="text-white/80 text-lg font-medium"><a href="https://dinurasellapperuma.com" target="_blank">By D I X Y</a></p>
         </div>
+      </div>
 
-        <!-- Main Content -->
-        <div class="max-w-4xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Input Section -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Generate QR Code</h2>
-                    
-                    <!-- Text Input -->
-                    <div class="mb-6">
-                        <label for="qrText" class="block text-sm font-medium text-gray-700 mb-2">
-                            Enter text or URL
-                        </label>
-                        <textarea 
-                            id="qrText" 
-                            placeholder="Enter text, URL, or any data you want to encode..."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                            rows="4"
-                        >https://www.example.com</textarea>
-                    </div>
-
-                    <!-- Options -->
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label for="qrSize" class="block text-sm font-medium text-gray-700 mb-2">
-                                Size (px)
-                            </label>
-                            <select id="qrSize" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                                <option value="200">200x200</option>
-                                <option value="300" selected>300x300</option>
-                                <option value="400">400x400</option>
-                                <option value="500">500x500</option>
-                                <option value="600">600x600</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label for="qrColor" class="block text-sm font-medium text-gray-700 mb-2">
-                                Foreground Color
-                            </label>
-                            <input 
-                                type="color" 
-                                id="qrColor" 
-                                value="#000000"
-                                class="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
-                            >
-                        </div>
-                    </div>
-
-                    <!-- Background Color -->
-                    <div class="mb-6">
-                        <label for="qrBgColor" class="block text-sm font-medium text-gray-700 mb-2">
-                            Background Color
-                        </label>
-                        <input 
-                            type="color" 
-                            id="qrBgColor" 
-                            value="#ffffff"
-                            class="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
-                        >
-                    </div>
-
-                    <!-- Error Correction Level -->
-                    <div class="mb-6">
-                        <label for="errorLevel" class="block text-sm font-medium text-gray-700 mb-2">
-                            Error Correction Level
-                        </label>
-                        <select id="errorLevel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            <option value="L">Low (7%)</option>
-                            <option value="M" selected>Medium (15%)</option>
-                            <option value="Q">Quartile (25%)</option>
-                            <option value="H">High (30%)</option>
-                        </select>
-                    </div>
-
-                    <!-- Generate Button -->
-                    <button 
-                        id="generateBtn"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105 shadow-lg"
-                    >
-                        🔄 Generate QR Code
-                    </button>
-                </div>
-
-                <!-- Preview Section -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Preview & Download</h2>
-                    
-                    <!-- QR Code Display -->
-                    <div id="qrDisplay" class="flex flex-col items-center justify-center min-h-[350px] border-2 border-dashed border-gray-300 rounded-lg mb-6 bg-gray-50">
-                        <div id="qrPlaceholder" class="text-center text-gray-500">
-                            <div class="animate-pulse">
-                                <svg class="mx-auto h-16 w-16 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                </svg>
-                                <p class="text-lg font-medium">Your QR code will appear here</p>
-                                <p class="text-sm">Click generate to create QR code</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- QR Info -->
-                    <div id="qrInfo" class="hidden mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <p class="text-sm text-blue-800"><strong>Data:</strong> <span id="qrDataInfo"></span></p>
-                        <p class="text-sm text-blue-800"><strong>Size:</strong> <span id="qrSizeInfo"></span></p>
-                        <p class="text-sm text-blue-800"><strong>Error Level:</strong> <span id="qrErrorInfo"></span></p>
-                    </div>
-
-                    <!-- Download Buttons -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <button 
-                            id="downloadPngBtn"
-                            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
-                            disabled
-                        >
-                            📥 Download PNG
-                        </button>
-                        <button 
-                            id="downloadSvgBtn"
-                            class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
-                            disabled
-                        >
-                            📄 Download SVG
-                        </button>
-                    </div>
-                </div>
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Input Section -->
+          <div class="glass rounded-3xl p-6 md:p-8 hover-lift transition-all duration-500 reveal">
+            <div class="flex items-center mb-8">
+              <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </div>
+              <h2 class="text-3xl font-bold text-white">Create</h2>
             </div>
 
-            <!-- Features -->
-            <div class="mt-12 grid md:grid-cols-4 gap-6">
-                <div class="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-2">Lightning Fast</h3>
-                    <p class="text-gray-600 text-sm">Generate QR codes instantly with professional quality</p>
-                </div>
-
-                <div class="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-2">Multiple Formats</h3>
-                    <p class="text-gray-600 text-sm">Download as PNG for images or SVG for scalable graphics</p>
-                </div>
-
-                <div class="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 3H5a2 2 0 00-2 2v12a4 4 0 004 4h2M9 3h6a2 2 0 012 2v12a4 4 0 01-4 4H9"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-2">Fully Customizable</h3>
-                    <p class="text-gray-600 text-sm">Choose colors, sizes, and error correction levels</p>
-                </div>
-
-                <div class="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-2">Error Correction</h3>
-                    <p class="text-gray-600 text-sm">Built-in error correction ensures reliable scanning</p>
-                </div>
+            <!-- Text Input -->
+            <div class="mb-8">
+              <label for="qrText" class="block text-white/90 font-semibold mb-3 text-lg"> Enter your content </label>
+              <div class="relative group">
+                <textarea id="qrText" placeholder="Type your text, URL, or any data here..." class="w-full px-6 py-4 glass-dark text-white placeholder-white/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none transition-all duration-300 text-lg" rows="4">https://www.example.com</textarea>
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl opacity-0 blur-sm transition-opacity duration-300 group-focus-within:opacity-20 -z-10"></div>
+              </div>
             </div>
+
+            <!-- Options Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div class="space-y-6">
+                <div>
+                  <label for="qrSize" class="block text-white/90 font-semibold mb-3"> Size </label>
+                  <select id="qrSize" class="w-full px-4 py-3 glass-dark text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300">
+                    <option value="200">Small (200px)</option>
+                    <option value="300" selected>Medium (300px)</option>
+                    <option value="400">Large (400px)</option>
+                    <option value="500">XL (500px)</option>
+                    <option value="600">XXL (600px)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="qrColor" class="block text-white/90 font-semibold mb-3"> Foreground </label>
+                  <div class="relative">
+                    <input type="color" id="qrColor" value="#000000" class="w-full h-12 glass-dark rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div>
+                  <label for="qrBgColor" class="block text-white/90 font-semibold mb-3"> Background </label>
+                  <div class="relative">
+                    <input type="color" id="qrBgColor" value="#ffffff" class="w-full h-12 glass-dark rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300" />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="errorLevel" class="block text-white/90 font-semibold mb-3"> Error Correction </label>
+                  <select id="errorLevel" class="w-full px-4 py-3 glass-dark text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300">
+                    <option value="L">Low (7%)</option>
+                    <option value="M" selected>Medium (15%)</option>
+                    <option value="Q">Quartile (25%)</option>
+                    <option value="H">High (30%)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button id="generateBtn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 micro-bounce shadow-2xl text-lg pulse-glow">
+              <span class="flex items-center justify-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Generate QR Code
+              </span>
+            </button>
+          </div>
+
+          <!-- Preview Section -->
+          <div class="glass rounded-3xl p-6 md:p-8 hover-lift transition-all duration-500 reveal">
+            <div class="flex items-center mb-8">
+              <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+              </div>
+              <h2 class="text-3xl font-bold text-white">Preview</h2>
+            </div>
+
+            <!-- QR Code Display -->
+            <div id="qrDisplay" class="flex flex-col items-center justify-center min-h-[400px] glass-dark rounded-3xl mb-8 transition-all duration-500">
+              <div id="qrPlaceholder" class="text-center text-white/60">
+                <div class="animate-pulse">
+                  <div class="w-24 h-24 bg-gradient-to-r from-blue-400 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                  </div>
+                  <p class="text-2xl font-bold text-white mb-2">Your QR Code</p>
+                  <p class="text-white/60">Will appear here magically ✨</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR Info -->
+            <div id="qrInfo" class="hidden mb-6 p-4 glass-dark rounded-2xl border border-blue-400/30">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div class="text-center">
+                  <p class="text-blue-300 font-semibold">Data</p>
+                  <p class="text-white/80 break-all" id="qrDataInfo"></p>
+                </div>
+                <div class="text-center">
+                  <p class="text-green-300 font-semibold">Size</p>
+                  <p class="text-white/80" id="qrSizeInfo"></p>
+                </div>
+                <div class="text-center">
+                  <p class="text-purple-300 font-semibold">Error Level</p>
+                  <p class="text-white/80" id="qrErrorInfo"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Download Buttons -->
+            <div class="grid grid-cols-2 gap-4">
+              <button id="downloadPngBtn" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100 shadow-xl micro-bounce" disabled>
+                <span class="flex items-center justify-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                  </svg>
+                  PNG
+                </span>
+              </button>
+              <button id="downloadSvgBtn" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100 shadow-xl micro-bounce" disabled>
+                <span class="flex items-center justify-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  SVG
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
+
+        <!-- Features -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="glass rounded-2xl p-6 text-center hover-lift transition-all duration-500 group reveal">
+            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Lightning Fast</h3>
+            <p class="text-white/70">Instant QR code generation with zero delays</p>
+          </div>
+
+          <div class="glass rounded-2xl p-6 text-center hover-lift transition-all duration-500 group reveal">
+            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Multiple Formats</h3>
+            <p class="text-white/70">Export as PNG or SVG for any use case</p>
+          </div>
+
+          <div class="glass rounded-2xl p-6 text-center hover-lift transition-all duration-500 group reveal">
+            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM7 3H5a2 2 0 00-2 2v12a4 4 0 004 4h2M9 3h6a2 2 0 012 2v12a4 4 0 01-4 4H9"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Fully Customizable</h3>
+            <p class="text-white/70">Colors, sizes, and error correction levels</p>
+          </div>
+
+          <div class="glass rounded-2xl p-6 text-center hover-lift transition-all duration-500 group reveal">
+            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Error Correction</h3>
+            <p class="text-white/70">Built-in error correction for reliability</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        let currentQRCode = null;
-        let currentSVG = null;
+      // Global variables
+      let currentQRCode = null;
+      let currentCanvas = null;
+      let debounceTimer = null;
+      let isGenerating = false;
 
-        // Generate QR Code using qrcode-generator library
-        function generateQRCode() {
-            const text = document.getElementById('qrText').value.trim();
-            const size = parseInt(document.getElementById('qrSize').value);
-            const fgColor = document.getElementById('qrColor').value;
-            const bgColor = document.getElementById('qrBgColor').value;
-            const errorLevel = document.getElementById('errorLevel').value;
-            
-            if (!text) {
-                showError('Please enter some text or URL to generate QR code');
-                return;
-            }
+      // QR Code generation using QRious library
+      function generateQRCode() {
+        if (isGenerating) return;
 
+        const text = document.getElementById("qrText").value.trim();
+        const size = parseInt(document.getElementById("qrSize").value);
+        const fgColor = document.getElementById("qrColor").value;
+        const bgColor = document.getElementById("qrBgColor").value;
+        const errorLevel = document.getElementById("errorLevel").value;
+
+        if (!text) {
+          showError("Please enter some text or URL to generate QR code");
+          return;
+        }
+
+        if (text.length > 4000) {
+          showError("Text is too long. Please use less than 4000 characters.");
+          return;
+        }
+
+        // Check if QRious library is available
+        if (typeof QRious === "undefined") {
+          showError("QR Code library is not loaded. Please refresh the page.");
+          return;
+        }
+
+        try {
+          isGenerating = true;
+          showLoading();
+
+          // Create QR code using QRious - wait a bit for the loading animation
+          setTimeout(() => {
             try {
-                // Show loading state
-                showLoading();
+              const canvas = document.createElement("canvas");
+              const qr = new QRious({
+                element: canvas,
+                value: text,
+                size: size,
+                foreground: fgColor,
+                background: bgColor,
+                level: errorLevel,
+              });
 
-                // Create QR code instance
-                const qr = qrcode(0, errorLevel);
-                qr.addData(text);
-                qr.make();
+              // Store current QR code
+              currentQRCode = qr;
+              currentCanvas = canvas;
 
-                // Get module count for sizing
-                const moduleCount = qr.getModuleCount();
-                const cellSize = Math.floor(size / (moduleCount + 2)); // +2 for quiet zone
-                const qrSize = cellSize * (moduleCount + 2);
+              // Display QR code
+              displayQRCode(canvas, text, size, errorLevel);
 
-                // Generate SVG
-                const svgString = createSVG(qr, qrSize, cellSize, fgColor, bgColor);
-                
-                // Generate Canvas for PNG
-                const canvas = createCanvas(qr, qrSize, cellSize, fgColor, bgColor);
-
-                // Display QR code
-                displayQRCode(canvas, svgString, text, qrSize, errorLevel);
-
-                // Store for download
-                currentQRCode = canvas;
-                currentSVG = svgString;
-
-                // Enable download buttons
-                document.getElementById('downloadPngBtn').disabled = false;
-                document.getElementById('downloadSvgBtn').disabled = false;
-
+              // Enable download buttons
+              document.getElementById("downloadPngBtn").disabled = false;
+              document.getElementById("downloadSvgBtn").disabled = false;
             } catch (error) {
-                console.error('QR Code generation error:', error);
-                showError('Error generating QR code. Please try with different text or settings.');
+              console.error("QR Code generation error:", error);
+              showError("Error generating QR code. Please check your input and try again.");
+            } finally {
+              isGenerating = false;
             }
+          }, 500);
+        } catch (error) {
+          console.error("QR Code generation error:", error);
+          showError("Error generating QR code. Please check your input and try again.");
+          isGenerating = false;
         }
+      }
 
-        // Create SVG string
-        function createSVG(qr, size, cellSize, fgColor, bgColor) {
-            const moduleCount = qr.getModuleCount();
-            const quietZone = cellSize;
-            
-            let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
-            svg += `<rect width="${size}" height="${size}" fill="${bgColor}"/>`;
-            
-            for (let row = 0; row < moduleCount; row++) {
-                for (let col = 0; col < moduleCount; col++) {
-                    if (qr.isDark(row, col)) {
-                        const x = col * cellSize + quietZone;
-                        const y = row * cellSize + quietZone;
-                        svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="${fgColor}"/>`;
-                    }
-                }
-            }
-            
-            svg += '</svg>';
-            return svg;
-        }
+      // Display QR code in the preview area
+      function displayQRCode(canvas, text, size, errorLevel) {
+        const qrDisplay = document.getElementById("qrDisplay");
+        const qrInfo = document.getElementById("qrInfo");
 
-        // Create Canvas
-        function createCanvas(qr, size, cellSize, fgColor, bgColor) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const moduleCount = qr.getModuleCount();
-            const quietZone = cellSize;
-            
-            canvas.width = size;
-            canvas.height = size;
-            
-            // Fill background
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, size, size);
-            
-            // Draw QR modules
-            ctx.fillStyle = fgColor;
-            for (let row = 0; row < moduleCount; row++) {
-                for (let col = 0; col < moduleCount; col++) {
-                    if (qr.isDark(row, col)) {
-                        const x = col * cellSize + quietZone;
-                        const y = row * cellSize + quietZone;
-                        ctx.fillRect(x, y, cellSize, cellSize);
-                    }
-                }
-            }
-            
-            return canvas;
-        }
+        // Clear display
+        qrDisplay.innerHTML = "";
 
-        // Display QR code
-        function displayQRCode(canvas, svgString, text, size, errorLevel) {
-            const qrDisplay = document.getElementById('qrDisplay');
-            const qrInfo = document.getElementById('qrInfo');
-            
-            // Clear display
-            qrDisplay.innerHTML = '';
-            
-            // Create container
-            const container = document.createElement('div');
-            container.className = 'text-center';
-            
-            // Add canvas with styling
-            canvas.style.maxWidth = '100%';
-            canvas.style.height = 'auto';
-            canvas.style.borderRadius = '12px';
-            canvas.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)';
-            canvas.style.border = '4px solid white';
-            
-            container.appendChild(canvas);
-            qrDisplay.appendChild(container);
-            
-            // Update info
-            document.getElementById('qrDataInfo').textContent = text.length > 50 ? text.substring(0, 50) + '...' : text;
-            document.getElementById('qrSizeInfo').textContent = `${size}x${size} pixels`;
-            document.getElementById('qrErrorInfo').textContent = getErrorLevelName(errorLevel);
-            qrInfo.classList.remove('hidden');
-        }
+        // Create container
+        const container = document.createElement("div");
+        container.className = "text-center p-4";
 
-        // Show loading state
-        function showLoading() {
-            const qrDisplay = document.getElementById('qrDisplay');
-            qrDisplay.innerHTML = `
-                <div class="text-center text-blue-600">
-                    <div class="animate-spin mx-auto h-12 w-12 mb-4">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        // Clone and style the canvas
+        const displayCanvas = canvas.cloneNode(true);
+        const ctx = canvas.getContext("2d");
+        const newCtx = displayCanvas.getContext("2d");
+
+        // Copy the image data to the new canvas
+        newCtx.drawImage(canvas, 0, 0);
+
+        displayCanvas.style.maxWidth = "100%";
+        displayCanvas.style.maxHeight = "350px";
+        displayCanvas.style.height = "auto";
+        displayCanvas.style.borderRadius = "0";
+        displayCanvas.style.boxShadow = "0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)";
+        displayCanvas.className = "qr-scale-in";
+
+        container.appendChild(displayCanvas);
+        qrDisplay.appendChild(container);
+
+        // Update info panel
+        const dataText = text.length > 30 ? text.substring(0, 30) + "..." : text;
+        document.getElementById("qrDataInfo").textContent = dataText;
+        document.getElementById("qrSizeInfo").textContent = `${size}×${size}px`;
+        document.getElementById("qrErrorInfo").textContent = getErrorLevelName(errorLevel);
+
+        // Show info with animation
+        qrInfo.classList.remove("hidden");
+        qrInfo.style.opacity = "0";
+        qrInfo.style.transform = "translateY(20px)";
+
+        setTimeout(() => {
+          qrInfo.style.opacity = "1";
+          qrInfo.style.transform = "translateY(0)";
+          qrInfo.style.transition = "all 0.5s ease";
+        }, 300);
+      }
+
+      // Show loading state
+      function showLoading() {
+        const qrDisplay = document.getElementById("qrDisplay");
+        qrDisplay.innerHTML = `
+                <div class="text-center text-white p-8">
+                    <div class="relative">
+                        <div class="w-20 h-20 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mx-auto mb-6"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold mb-2">Generating Magic ✨</p>
+                    <p class="text-white/70">Creating your beautiful QR code...</p>
+                </div>
+            `;
+
+        // Hide info panel during loading
+        document.getElementById("qrInfo").classList.add("hidden");
+      }
+
+      // Show error state
+      function showError(message) {
+        const qrDisplay = document.getElementById("qrDisplay");
+        qrDisplay.innerHTML = `
+                <div class="text-center text-red-300 p-8">
+                    <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <p class="text-lg font-medium">Generating QR Code...</p>
+                    <p class="text-2xl font-bold text-white mb-2">Oops!</p>
+                    <p class="text-white/70">${message}</p>
                 </div>
             `;
-        }
 
-        // Show error
-        function showError(message) {
-            const qrDisplay = document.getElementById('qrDisplay');
-            qrDisplay.innerHTML = `
-                <div class="text-center text-red-500">
-                    <svg class="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <p class="text-lg font-medium">Error</p>
-                    <p class="text-sm">${message}</p>
-                </div>
-            `;
-            
-            document.getElementById('downloadPngBtn').disabled = true;
-            document.getElementById('downloadSvgBtn').disabled = true;
-            document.getElementById('qrInfo').classList.add('hidden');
-        }
+        // Disable download buttons
+        document.getElementById("downloadPngBtn").disabled = true;
+        document.getElementById("downloadSvgBtn").disabled = true;
 
-        // Get error level name
-        function getErrorLevelName(level) {
-            const levels = { L: 'Low (7%)', M: 'Medium (15%)', Q: 'Quartile (25%)', H: 'High (30%)' };
-            return levels[level] || 'Medium (15%)';
-        }
+        // Hide info panel
+        document.getElementById("qrInfo").classList.add("hidden");
+      }
 
-        // Download PNG
-        function downloadPNG() {
-            if (!currentQRCode) {
-                alert('Please generate a QR code first');
-                return;
+      // Get error level name
+      function getErrorLevelName(level) {
+        const levels = {
+          L: "Low (7%)",
+          M: "Medium (15%)",
+          Q: "Quartile (25%)",
+          H: "High (30%)",
+        };
+        return levels[level] || "Medium (15%)";
+      }
+
+      // Generate SVG from canvas
+      function canvasToSVG(canvas, fgColor, bgColor) {
+        const ctx = canvas.getContext("2d");
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        let svg = `<svg width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}" xmlns="http://www.w3.org/2000/svg">`;
+        svg += `<rect width="${canvas.width}" height="${canvas.height}" fill="${bgColor}"/>`;
+
+        // Convert pixels to SVG rectangles
+        for (let y = 0; y < canvas.height; y++) {
+          for (let x = 0; x < canvas.width; x++) {
+            const index = (y * canvas.width + x) * 4;
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
+
+            // If pixel is dark (not background)
+            if (r < 128 && g < 128 && b < 128) {
+              svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${fgColor}"/>`;
             }
-            
-            const link = document.createElement('a');
-            link.download = 'qrcode.png';
-            link.href = currentQRCode.toDataURL('image/png');
-            link.click();
+          }
         }
 
-        // Download SVG
-        function downloadSVG() {
-            if (!currentSVG) {
-                alert('Please generate a QR code first');
-                return;
+        svg += "</svg>";
+        return svg;
+      }
+
+      // Download PNG
+      function downloadPNG() {
+        if (!currentCanvas) {
+          showError("Please generate a QR code first");
+          return;
+        }
+
+        try {
+          const link = document.createElement("a");
+          link.download = "qrcode.png";
+          link.href = currentCanvas.toDataURL("image/png");
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          showDownloadFeedback("downloadPngBtn", "PNG Downloaded!");
+        } catch (error) {
+          console.error("PNG download error:", error);
+          showError("Failed to download PNG. Please try again.");
+        }
+      }
+
+      // Download SVG
+      function downloadSVG() {
+        if (!currentCanvas) {
+          showError("Please generate a QR code first");
+          return;
+        }
+
+        try {
+          const fgColor = document.getElementById("qrColor").value;
+          const bgColor = document.getElementById("qrBgColor").value;
+          const svgString = canvasToSVG(currentCanvas, fgColor, bgColor);
+
+          const blob = new Blob([svgString], { type: "image/svg+xml" });
+          const link = document.createElement("a");
+          link.download = "qrcode.svg";
+          link.href = URL.createObjectURL(blob);
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          setTimeout(() => URL.revokeObjectURL(link.href), 100);
+
+          showDownloadFeedback("downloadSvgBtn", "SVG Downloaded!");
+        } catch (error) {
+          console.error("SVG download error:", error);
+          showError("Failed to download SVG. Please try again.");
+        }
+      }
+
+      // Show download feedback
+      function showDownloadFeedback(buttonId, message) {
+        const btn = document.getElementById(buttonId);
+        const originalHTML = btn.innerHTML;
+        const originalClasses = btn.className;
+
+        btn.innerHTML = `<span class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                ${message}
+            </span>`;
+
+        btn.className = originalClasses.replace(/from-\w+-\d+/g, "from-green-500").replace(/to-\w+-\d+/g, "to-green-600");
+
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.className = originalClasses;
+        }, 2000);
+      }
+
+      // Create particle effect
+      function createParticleEffect(button) {
+        const rect = button.getBoundingClientRect();
+
+        for (let i = 0; i < 6; i++) {
+          const particle = document.createElement("div");
+          particle.style.cssText = `
+                    position: fixed;
+                    left: ${rect.left + rect.width / 2}px;
+                    top: ${rect.top + rect.height / 2}px;
+                    width: 4px;
+                    height: 4px;
+                    background: linear-gradient(45deg, #60A5FA, #A855F7);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                `;
+          document.body.appendChild(particle);
+
+          const angle = (i / 6) * Math.PI * 2;
+          const velocity = 100;
+          const vx = Math.cos(angle) * velocity;
+          const vy = Math.sin(angle) * velocity;
+
+          let x = 0,
+            y = 0,
+            opacity = 1;
+
+          const animate = () => {
+            x += vx * 0.016;
+            y += vy * 0.016;
+            opacity -= 0.02;
+
+            particle.style.transform = `translate(${x}px, ${y}px)`;
+            particle.style.opacity = opacity;
+
+            if (opacity > 0) {
+              requestAnimationFrame(animate);
+            } else {
+              if (document.body.contains(particle)) {
+                document.body.removeChild(particle);
+              }
             }
-            
-            const blob = new Blob([currentSVG], { type: 'image/svg+xml' });
-            const link = document.createElement('a');
-            link.download = 'qrcode.svg';
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            URL.revokeObjectURL(link.href);
+          };
+
+          animate();
         }
+      }
 
-        // Event listeners
-        document.getElementById('generateBtn').addEventListener('click', generateQRCode);
-        document.getElementById('downloadPngBtn').addEventListener('click', downloadPNG);
-        document.getElementById('downloadSvgBtn').addEventListener('click', downloadSVG);
+      // Reveal animation on load
+      function revealElements() {
+        const reveals = document.querySelectorAll(".reveal");
+        reveals.forEach((element, index) => {
+          setTimeout(() => {
+            element.classList.add("show");
+          }, index * 150);
+        });
+      }
 
-        // Auto-generate on text input (with debounce)
-        let debounceTimer;
-        document.getElementById('qrText').addEventListener('input', function() {
+      // Event Listeners
+      document.getElementById("generateBtn").addEventListener("click", function (e) {
+        createParticleEffect(this);
+        generateQRCode();
+      });
+
+      document.getElementById("downloadPngBtn").addEventListener("click", downloadPNG);
+      document.getElementById("downloadSvgBtn").addEventListener("click", downloadSVG);
+
+      // Auto-generate on text input with debouncing
+      document.getElementById("qrText").addEventListener("input", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          if (this.value.trim() && !isGenerating) {
+            generateQRCode();
+          }
+        }, 1000);
+      });
+
+      // Auto-generate on option changes
+      ["qrSize", "qrColor", "qrBgColor", "errorLevel"].forEach((id) => {
+        document.getElementById(id).addEventListener("change", () => {
+          if (document.getElementById("qrText").value.trim() && !isGenerating) {
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                if (this.value.trim()) generateQRCode();
-            }, 800);
+            debounceTimer = setTimeout(generateQRCode, 200);
+          }
         });
+      });
 
-        // Auto-generate on option changes
-        ['qrSize', 'qrColor', 'qrBgColor', 'errorLevel'].forEach(id => {
-            document.getElementById(id).addEventListener('change', () => {
-                if (document.getElementById('qrText').value.trim()) {
-                    setTimeout(generateQRCode, 100);
-                }
-            });
-        });
+      // Generate on Enter key (but not Shift+Enter)
+      document.getElementById("qrText").addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          if (!isGenerating) {
+            generateQRCode();
+          }
+        }
+      });
 
-        // Generate on Enter key
-        document.getElementById('qrText').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                generateQRCode();
-            }
-        });
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+          switch (e.key) {
+            case "Enter":
+              e.preventDefault();
+              if (!isGenerating) generateQRCode();
+              break;
+            case "s":
+              e.preventDefault();
+              if (currentCanvas) downloadPNG();
+              break;
+            case "d":
+              e.preventDefault();
+              if (currentCanvas) downloadSVG();
+              break;
+          }
+        }
+      });
 
-        // Generate initial QR code
-        window.addEventListener('load', function() {
-            setTimeout(generateQRCode, 300);
-        });
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Reveal elements with staggered animation
+        setTimeout(revealElements, 100);
+
+        // Generate initial QR code after checking library
+        setTimeout(() => {
+          if (typeof QRious !== "undefined" && !isGenerating) {
+            generateQRCode();
+          } else if (typeof QRious === "undefined") {
+            showError("QR Code library failed to load. Please refresh the page.");
+          }
+        }, 1000);
+      });
+
+      // Handle window resize for responsive behavior
+      let resizeTimer;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          // Regenerate QR code if size changed and we have content
+          const text = document.getElementById("qrText").value.trim();
+          if (text && currentCanvas && !isGenerating) {
+            generateQRCode();
+          }
+        }, 300);
+      });
+
+      // Global error handling
+      window.addEventListener("error", function (e) {
+        console.error("Global error:", e.error);
+        if (isGenerating) {
+          isGenerating = false;
+          showError("Something went wrong. Please try again.");
+        }
+      });
+
+      window.addEventListener("unhandledrejection", function (e) {
+        console.error("Unhandled promise rejection:", e.reason);
+        if (isGenerating) {
+          isGenerating = false;
+          showError("Something went wrong. Please try again.");
+        }
+      });
     </script>
-</body>
+  </body>
 </html>

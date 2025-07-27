@@ -173,6 +173,47 @@
         color: #1f1f1f;
       }
 
+      /* Checkbox styling */
+      .custom-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .custom-checkbox:checked {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-color: #4facfe;
+      }
+
+      .custom-checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      /* Transparency checker pattern */
+      .transparency-bg {
+        background-image: 
+          linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+          linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+          linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      }
+
       /* Responsive fixes */
       @media (max-width: 768px) {
         .float {
@@ -293,6 +334,16 @@
                   <div class="relative">
                     <input type="color" id="qrBgColor" value="#ffffff" class="w-full h-12 glass-dark rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300" />
                   </div>
+                  <!-- Transparent Background Option -->
+                  <div class="flex items-center mt-3 p-3 glass-dark rounded-xl">
+                    <input type="checkbox" id="transparentBg" class="custom-checkbox mr-3">
+                    <label for="transparentBg" class="text-gray-700 font-medium cursor-pointer flex items-center">
+                      <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                      </svg>
+                      Transparent Background
+                    </label>
+                  </div>
                 </div>
 
                 <div>
@@ -357,8 +408,8 @@
                   <p class="text-gray-600" id="qrSizeInfo"></p>
                 </div>
                 <div class="text-center">
-                  <p class="text-purple-300 font-semibold">Error Level</p>
-                  <p class="text-gray-600" id="qrErrorInfo"></p>
+                  <p class="text-purple-300 font-semibold">Background</p>
+                  <p class="text-gray-600" id="qrBgInfo"></p>
                 </div>
               </div>
             </div>
@@ -400,11 +451,11 @@
           <div class="glass rounded-2xl p-6 text-center hover-lift transition-all duration-500 group reveal">
             <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Multiple Formats</h3>
-            <p class="text-gray-500">Export as PNG or SVG for any use case</p>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Transparent Option</h3>
+            <p class="text-gray-500">Create QR codes with transparent backgrounds</p>
           </div>
 
           <div class="glass rounded-2xl p-6 text-center hover-lift transition-all duration-500 group reveal">
@@ -446,6 +497,7 @@
         const fgColor = document.getElementById("qrColor").value;
         const bgColor = document.getElementById("qrBgColor").value;
         const errorLevel = document.getElementById("errorLevel").value;
+        const isTransparent = document.getElementById("transparentBg").checked;
 
         if (!text) {
           showError("Please enter some text or URL to generate QR code");
@@ -471,12 +523,16 @@
           setTimeout(() => {
             try {
               const canvas = document.createElement("canvas");
+              
+              // Use transparent background if checked, otherwise use selected color
+              const finalBgColor = isTransparent ? 'rgba(0,0,0,0)' : bgColor;
+
               const qr = new QRious({
                 element: canvas,
                 value: text,
                 size: size,
                 foreground: fgColor,
-                background: bgColor,
+                background: finalBgColor,
                 level: errorLevel,
               });
 
@@ -485,7 +541,7 @@
               currentCanvas = canvas;
 
               // Display QR code
-              displayQRCode(canvas, text, size, errorLevel);
+              displayQRCode(canvas, text, size, errorLevel, isTransparent);
 
               // Enable download buttons
               document.getElementById("downloadPngBtn").disabled = false;
@@ -505,7 +561,7 @@
       }
 
       // Display QR code in the preview area
-      function displayQRCode(canvas, text, size, errorLevel) {
+      function displayQRCode(canvas, text, size, errorLevel, isTransparent) {
         const qrDisplay = document.getElementById("qrDisplay");
         const qrInfo = document.getElementById("qrInfo");
 
@@ -531,14 +587,23 @@
         displayCanvas.style.boxShadow = "0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)";
         displayCanvas.className = "qr-scale-in";
 
-        container.appendChild(displayCanvas);
+        // Add transparency checker background if transparent
+        if (isTransparent) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "transparency-bg rounded-2xl p-4 inline-block";
+          wrapper.appendChild(displayCanvas);
+          container.appendChild(wrapper);
+        } else {
+          container.appendChild(displayCanvas);
+        }
+
         qrDisplay.appendChild(container);
 
         // Update info panel
         const dataText = text.length > 30 ? text.substring(0, 30) + "..." : text;
         document.getElementById("qrDataInfo").textContent = dataText;
         document.getElementById("qrSizeInfo").textContent = `${size}×${size}px`;
-        document.getElementById("qrErrorInfo").textContent = getErrorLevelName(errorLevel);
+        document.getElementById("qrBgInfo").textContent = isTransparent ? "Transparent" : "Solid Color";
 
         // Show info with animation
         qrInfo.classList.remove("hidden");
@@ -606,14 +671,18 @@
         return levels[level] || "Medium (15%)";
       }
 
-      // Generate SVG from canvas
-      function canvasToSVG(canvas, fgColor, bgColor) {
+      // Generate SVG from canvas with transparency support
+      function canvasToSVG(canvas, fgColor, bgColor, isTransparent) {
         const ctx = canvas.getContext("2d");
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
         let svg = `<svg width="${canvas.width}" height="${canvas.height}" viewBox="0 0 ${canvas.width} ${canvas.height}" xmlns="http://www.w3.org/2000/svg">`;
-        svg += `<rect width="${canvas.width}" height="${canvas.height}" fill="${bgColor}"/>`;
+        
+        // Only add background rect if not transparent
+        if (!isTransparent) {
+          svg += `<rect width="${canvas.width}" height="${canvas.height}" fill="${bgColor}"/>`;
+        }
 
         // Convert pixels to SVG rectangles
         for (let y = 0; y < canvas.height; y++) {
@@ -622,9 +691,10 @@
             const r = data[index];
             const g = data[index + 1];
             const b = data[index + 2];
+            const a = data[index + 3];
 
-            // If pixel is dark (not background)
-            if (r < 128 && g < 128 && b < 128) {
+            // If pixel is dark (foreground) and not transparent
+            if (r < 128 && g < 128 && b < 128 && a > 128) {
               svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="${fgColor}"/>`;
             }
           }
@@ -667,7 +737,8 @@
         try {
           const fgColor = document.getElementById("qrColor").value;
           const bgColor = document.getElementById("qrBgColor").value;
-          const svgString = canvasToSVG(currentCanvas, fgColor, bgColor);
+          const isTransparent = document.getElementById("transparentBg").checked;
+          const svgString = canvasToSVG(currentCanvas, fgColor, bgColor, isTransparent);
 
           const blob = new Blob([svgString], { type: "image/svg+xml" });
           const link = document.createElement("a");
@@ -767,6 +838,22 @@
         });
       }
 
+      // Handle transparent background checkbox change
+      function handleTransparencyChange() {
+        const transparentBg = document.getElementById("transparentBg").checked;
+        const bgColorInput = document.getElementById("qrBgColor");
+        
+        // Disable/enable background color input based on transparency
+        bgColorInput.disabled = transparentBg;
+        bgColorInput.style.opacity = transparentBg ? "0.5" : "1";
+        
+        // Auto-generate if we have content
+        if (document.getElementById("qrText").value.trim() && !isGenerating) {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(generateQRCode, 200);
+        }
+      }
+
       // Event Listeners
       document.getElementById("generateBtn").addEventListener("click", function (e) {
         createParticleEffect(this);
@@ -775,6 +862,9 @@
 
       document.getElementById("downloadPngBtn").addEventListener("click", downloadPNG);
       document.getElementById("downloadSvgBtn").addEventListener("click", downloadSVG);
+
+      // Transparent background checkbox
+      document.getElementById("transparentBg").addEventListener("change", handleTransparencyChange);
 
       // Auto-generate on text input with debouncing
       document.getElementById("qrText").addEventListener("input", function () {
